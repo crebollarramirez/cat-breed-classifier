@@ -68,7 +68,7 @@ def split_dataset(dataset, train_ratio=0.8, random_state=None):
     # Get the indices of the dataset
     dataset_size = len(dataset)
     indices = list(range(dataset_size))
-    targets = [dataset[i][1] for i in indices]
+    #targets = [dataset[i][1] for i in indices]
     
     # Split the indices into training and testing sets
     train_indices, test_indices = train_test_split(indices, train_size=train_ratio, random_state=random_state, shuffle=False)
@@ -76,6 +76,8 @@ def split_dataset(dataset, train_ratio=0.8, random_state=None):
     # Create subsets for training and testing
     train_dataset = Subset(dataset, train_indices)
     test_dataset = Subset(dataset, test_indices)
+
+    
     
     return train_dataset, test_dataset
         
