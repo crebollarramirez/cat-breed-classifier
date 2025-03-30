@@ -3,9 +3,22 @@ from torchvision.datasets.folder import default_loader
 from PIL import Image
 import os
 import json
+import numpy as np
 from sklearn.model_selection import train_test_split
 from torch.utils.data import Subset
 
+def load_data(directory_path, transform=None):
+    """
+    Load data from the specified directory.
+
+    Args:
+        directory_path (str): Path to the directory containing the data.
+        transform (callable, optional): A function/transform that takes in an image and returns a transformed version.
+
+    Returns:
+        dataset (CustomImageFolder): Dataset object containing the images and their corresponding metadata.
+    """
+    return CustomImageFolder(root=directory_path, transform=transform)
 
 def get_transformation(data_set, transforms_list=None):
     """
@@ -23,10 +36,19 @@ def get_transformation(data_set, transforms_list=None):
     
     augmented_data = []
     for image in data_set:
-        augmented_data.append(image) # adding originals
+        
+        # # Choose random transformations from the list 
+        # include_indices = np.random.multinomial(1, [1/2.]*2, size=len(transforms_list))
+        # filtered_transforms_list = [transforms_list[i] for i in range(len(transforms_list)) if (include_indices[i] == 1)]
+        
+        # Apply the randomly-selected transformations to the image
+        transformed_image = image[0]
+        label = image[1]
         for transform in transforms_list:
-            transformed_image = transform(image[0])
-            augmented_data.append((transformed_image, image[1]))
+            r = np.random.rand()
+            if r > 0.5:
+                transformed_image = transform(transformed_image)
+        augmented_data.append((transformed_image, label))
 
     return augmented_data
 
